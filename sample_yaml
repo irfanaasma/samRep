@@ -1,2 +1,25 @@
-integerValue:1
-floatingValue:2
+name: Mythril audit
+on: [push]
+
+ 
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install Mythril
+        run: |
+          pip install mythril
+      - name: Run Mythril analysis
+        run: myth analyze contracts/*.sol  --out json > results.json
+
+      - name: Upload Mythril report
+        uses: actions/upload-artifact@v2
+        with:
+         name: Mytril report
+         path: results.json
